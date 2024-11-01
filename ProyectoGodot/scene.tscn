@@ -1,0 +1,130 @@
+[gd_scene load_steps=11 format=3 uid="uid://buyvnbuwi8bnq"]
+
+[ext_resource type="Script" path="res://camera_3d.gd" id="1_7pkuy"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_xtye3"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_06opt"]
+metallic = 1.0
+
+[sub_resource type="Animation" id="Animation_vk4dq"]
+resource_name = "move"
+length = 6.0
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2, 3, 4, 5, 6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(-4.56238, -0.470197, 0), Vector3(0.089787, -0.470197, 0.406162), Vector3(1.37661, -0.470197, -1.65993), Vector3(-1.1202, -0.470197, -1.82356), Vector3(-2.84129, -0.470197, -0.427141), Vector3(-2.7339, 0.254055, -0.695714)]
+}
+
+[sub_resource type="Animation" id="Animation_8m2hk"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-4.56238, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_360g4"]
+_data = {
+"RESET": SubResource("Animation_8m2hk"),
+"move": SubResource("Animation_vk4dq")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_krnik"]
+albedo_color = Color(0.815453, 0.309282, 0.203495, 1)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5n3k0"]
+sky_top_color = Color(0.246475, 0.395977, 0.535447, 1)
+sky_horizon_color = Color(0.452747, 0.666162, 0.751502, 1)
+ground_bottom_color = Color(0.247059, 0.396078, 0.537255, 1)
+ground_horizon_color = Color(0.45098, 0.666667, 0.752941, 1)
+
+[sub_resource type="Sky" id="Sky_irjy3"]
+sky_material = SubResource("ProceduralSkyMaterial_5n3k0")
+
+[sub_resource type="Environment" id="Environment_lbo6h"]
+background_mode = 2
+sky = SubResource("Sky_irjy3")
+
+[node name="Scene" type="Node3D"]
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.56238, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("SphereShape3D_xtye3")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="RigidBody3D/CollisionShape3D"]
+radial_segments = 30
+rings = 30
+material = SubResource("StandardMaterial3D_06opt")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="RigidBody3D"]
+libraries = {
+"": SubResource("AnimationLibrary_360g4")
+}
+autoplay = "move"
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(0.999829, 0.0184994, 0, -0.0184994, 0.999829, 0, 0, 0, 1, -0.0615156, -1.90189, 0.00806272)
+use_collision = true
+size = Vector3(10.849, 1.33398, 11.2062)
+material = SubResource("StandardMaterial3D_krnik")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.955433, 0.160993, -0.247447, 0.254208, -0.874838, 0.412354, -0.15009, -0.45688, -0.876775, -7.92782, 1.0411, -4.66671)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.98299)
+script = ExtResource("1_7pkuy")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_lbo6h")
+
+[node name="Green" type="SpotLight3D" parent="."]
+transform = Transform3D(0.785263, 0.295724, -0.543976, 0, 0.878567, 0.477619, 0.619162, -0.375056, 0.689906, -1.56253, 1.83512, 1.9626)
+light_color = Color(0.321569, 0.815686, 0.32549, 1)
+light_energy = 12.314
+light_indirect_energy = 5.687
+light_volumetric_fog_energy = 5.687
+shadow_enabled = true
+
+[node name="Purple" type="SpotLight3D" parent="."]
+transform = Transform3D(0.834425, -0.263226, 0.484197, 0, 0.878567, 0.477619, -0.551122, -0.398537, 0.733098, 1.37799, 1.21049, 1.9626)
+light_color = Color(0.462745, 0.345098, 0.596078, 1)
+light_energy = 12.475
+light_indirect_energy = 5.836
+light_volumetric_fog_energy = 5.687
+shadow_enabled = true
+
+[node name="Red" type="SpotLight3D" parent="."]
+transform = Transform3D(-0.851004, -0.250826, 0.461388, 2.88586e-08, 0.878567, 0.477619, -0.52516, 0.406455, -0.747664, 1.278, 1.21049, -3.24676)
+light_color = Color(1, 0, 0, 1)
+light_energy = 11.921
+light_indirect_energy = 5.526
+light_volumetric_fog_energy = 5.04
+shadow_enabled = true
+
+[node name="Blue" type="SpotLight3D" parent="."]
+transform = Transform3D(-0.97095, -0.0985815, -0.218031, -0.167189, 0.931368, 0.323423, 0.171183, 0.35048, -0.920793, -3.43815, 0.830769, -2.94882)
+light_color = Color(0, 0, 1, 1)
+light_energy = 16.0
+light_indirect_energy = 7.685
+light_volumetric_fog_energy = 7.788
+shadow_enabled = true
